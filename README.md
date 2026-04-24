@@ -49,15 +49,21 @@ You do this **once**, in the Azure AI Foundry portal. The app just needs a model
 
 ### 3. Grab the three values you need
 
-On the deployment's **View code** tab, pick `API: Completions API` → `Language: Python` → `SDK: OpenAI SDK`. You'll see the exact values used below.
+From your model deployment page in the Foundry portal, the **Target URI** will look like:
+
+```
+https://<resource>.services.ai.azure.com/api/projects/<project>/openai/v1/responses
+```
+
+You want the **base** of that URL (everything up to `/openai/v1`, dropping the `/responses` suffix). The OpenAI SDK will append the right path (`/chat/completions`) itself.
 
 | Env var | Where to find it | Example |
 |---|---|---|
-| `FOUNDRY_BASE_URL` | The `endpoint` value in the "View code" snippet (resource-level OpenAI-compatible endpoint) | `https://jordan-embr.openai.azure.com/openai/v1` |
+| `FOUNDRY_BASE_URL` | Target URI with the trailing `/responses` removed | `https://jordan-embr.services.ai.azure.com/api/projects/proj-default/openai/v1` |
 | `FOUNDRY_API_KEY` | **Keys + Endpoint** on the Foundry resource (click the key icon to reveal) | `abc123…` |
-| `FOUNDRY_MODEL_DEPLOYMENT` | The `deployment_name` value in the snippet — this is the deployment name, NOT the model family | `gpt-5.4-mini-1` |
+| `FOUNDRY_MODEL_DEPLOYMENT` | The deployment name you chose when you deployed the model | `gpt-5.4-mini-1` |
 
-> **Why the OpenAI-compat endpoint instead of the project one?** Foundry projects also expose a project-scoped URL under `services.ai.azure.com/api/projects/<name>/openai/v1/...`. Either works with `OpenAIChatClient(base_url=..., api_key=...)`, but the resource-level `openai.azure.com/openai/v1` endpoint is simpler to grab from the portal. For production you'd swap the API key for managed identity.
+> Resource-scoped endpoints (`https://<resource>.openai.azure.com/openai/v1`) also work if you prefer. Both point at the same underlying inference, just via different auth/routing paths.
 
 ---
 
