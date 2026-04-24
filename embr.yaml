@@ -4,7 +4,7 @@ autoDeploy: true
 
 run:
   port: 8000
-  startCommand: ". pythonenv3.12/bin/activate && python -m uvicorn app.main:app --host 0.0.0.0 --port 8000"
+  startCommand: "ls -la /output/ && ls -la /output/pythonenv3.12/bin/ 2>&1 | head -20; echo '--- which python ---'; which python; which python3; /output/pythonenv3.12/bin/python -m uvicorn app.main:app --host 0.0.0.0 --port 8000"
 
 healthCheck:
   enabled: true
